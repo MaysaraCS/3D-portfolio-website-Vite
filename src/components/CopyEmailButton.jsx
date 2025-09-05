@@ -1,6 +1,5 @@
 import { useState } from "react";
-//import { AnimatePresence, motion } from "motion/react";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 const CopyEmailButton = () => {
   const [copied, setCopied] = useState(false);

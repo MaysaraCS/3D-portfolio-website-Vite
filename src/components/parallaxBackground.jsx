@@ -1,5 +1,4 @@
-// import { motion, useScroll, useSpring, useTransform } from "motion/react";
-import {  useScroll, useSpring, useTransform } from "motion/react";
+import { motion, useScroll, useSpring, useTransform } from "motion/react";
 
 const ParallaxBackground = () => {
   const { scrollYProgress } = useScroll();

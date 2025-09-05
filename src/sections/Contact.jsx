@@ -28,26 +28,38 @@ const Contact = () => {
     setIsLoading(true);
 
     try {
-      console.log("From submitted:", formData);
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_szhcb6r'
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_0tj2c4p'
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '8yzn19HK3iuG3sNC9'
+
+      console.log("Form submitted:", formData);
+
       await emailjs.send(
-        "service_szhcb6r",
-        "template_0tj2c4p",
+        serviceId,
+        templateId,
         {
           from_name: formData.name,
           to_name: "Maysara",
           from_email: formData.email,
           to_email: "maysaracs1001@gmail.com",
           message: formData.message,
+          reply_to: formData.email,
         },
-        "8yzn19HK3iuG3sNC9"
+        { publicKey }
       );
       setIsLoading(false);
       setFormData({ name: "", email: "", message: "" });
       showAlertMessage("success", "You message has been sent!");
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
-      showAlertMessage("danger", "Somthing went wrong!");
+      const status = error?.status || error?.response?.status || ''
+      const text = error?.text || error?.message || ''
+      console.log('Email send error:', { status, text, raw: error });
+      const isPreconditionFailed = String(status).includes('412')
+      const message = isPreconditionFailed
+        ? "Email service misconfigured (412). Ensure EmailJS Domains include http://localhost:5173 and your Gmail service is connected."
+        : `Failed to send email. ${status ? `Status: ${status}.` : ''} ${text}`.trim();
+      showAlertMessage("danger", message);
     }
   };
   return (
